@@ -40,13 +40,13 @@ namespace fs {
         _fno = NULL;
     }
 
-    File::~File() {
-        close();
-        if (_fno) {
-            delete _fno;
-            _fno = NULL;
-        }
-    }
+    // File::~File() {
+    //     close();
+    //     if (_fno) {
+    //         delete _fno;
+    //         _fno = NULL;
+    //     }
+    // }
 
     // returns a pointer to the file name
     char* File::name(void) {
@@ -196,6 +196,10 @@ namespace fs {
         if (_file) {
             f_close(_file);
             delete _file;
+            _file = NULL;
+        }
+        if(_fno){
+            delete _fno;
             _file = NULL;
         }
     }
@@ -428,12 +432,11 @@ void seeed_fs_log_debug(const char *file, const long line, const char *format, .
 
     /* args point to the first variable parameter */
     va_start(args, format);
-
-    printf("[SEEED_FS](%s:%ld) ", file, line);
+    Serial.print("[SEEED_FS] ");
+    Serial.println(log_buf);
     /* must use vprintf to print */
     vsnprintf(log_buf, sizeof(log_buf), format, args);
-
-    printf("%s\n", log_buf);
+    Serial.println(log_buf);
     va_end(args);
 }
 
@@ -448,10 +451,10 @@ void seeed_fs_log_info(const char *format, ...) {
 
     /* args point to the first variable parameter */
     va_start(args, format);
-    printf("[SEEED_FS]");
+    Serial.print("[SEEED_FS INFO] ");
     /* must use vprintf to print */
     vsnprintf(log_buf, sizeof(log_buf), format, args);
-    printf("%s\n", log_buf);
+    Serial.println(log_buf);
     va_end(args);
 }
 
